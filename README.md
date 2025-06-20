@@ -12,10 +12,3 @@ Just type in what you're going through — a breakup, a glow-up, or a situations
 
 ## 🚧 Status
 Work in progress — currently experimenting with embedding models and Replit compatibility.
-
-
-├── Love Story.txt
-├── Shake It Off.txt
-├── Anti-Hero.txt
-└── Blank Space.txt
-```
