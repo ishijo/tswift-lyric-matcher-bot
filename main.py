@@ -16,20 +16,31 @@ lyrics_database = {}
 lyrics_embeddings = {}
 
 def load_lyrics_files():
-    """Load all .txt files from the lyrics directory and compute embeddings"""
+    """Load all .txt files from the lyrics directory and subdirectories and compute embeddings"""
     lyrics_dir = 'lyrics'
     if not os.path.exists(lyrics_dir):
         os.makedirs(lyrics_dir)
         return
     
-    txt_files = glob.glob(os.path.join(lyrics_dir, '*.txt'))
+    # Recursively find all .txt files in lyrics directory and subdirectories
+    txt_files = glob.glob(os.path.join(lyrics_dir, '**', '*.txt'), recursive=True)
     
     for file_path in txt_files:
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
                 content = file.read().strip()
                 if content:
-                    song_name = os.path.basename(file_path).replace('.txt', '')
+                    # Get relative path from lyrics directory for better song identification
+                    rel_path = os.path.relpath(file_path, lyrics_dir)
+                    album_folder = os.path.dirname(rel_path)
+                    song_filename = os.path.basename(file_path).replace('.txt', '')
+                    
+                    # Create song name with album context if in subfolder
+                    if album_folder and album_folder != '.':
+                        song_name = f"{album_folder}/{song_filename}"
+                    else:
+                        song_name = song_filename
+                    
                     lyrics_database[song_name] = content
                     
                     # Split lyrics into chunks for better matching
